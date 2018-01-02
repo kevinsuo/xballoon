@@ -1,6 +1,12 @@
-Usage:
+# Dependency
 
 The current design is based on Xen 4.5 and Linux 3.18. 
+
+You need:
+
+> gcc 5.0 and higher version
+
+# Usage:
 
 1, download the xen code and compile it through compile.sh
 
