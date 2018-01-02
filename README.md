@@ -1,6 +1,6 @@
 # Introduction
 
-While many prior studies at- tribute the suboptimal I/O performance to virtualization overhead and inefficient virtual machine scheduling  and propose corresponding solutions, we discover that the time discontinuity caused by virtualization can also degrade the I/O performance. With discontinuous CPU, I/O prioritization is ineffective in guest OSes to guarantee the performance of I/O-intensive workloads. xBalloon is a lightweight approach to preserving I/O prioritization under discontinuous CPU in virtualized systems.
+While many prior studies attribute the suboptimal I/O performance to virtualization overhead and inefficient virtual machine scheduling  and propose corresponding solutions, we discover that the time discontinuity caused by virtualization can also degrade the I/O performance. With discontinuous CPU, I/O prioritization is ineffective in guest OSes to guarantee the performance of I/O-intensive workloads. xBalloon is a lightweight approach to preserving I/O prioritization under discontinuous CPU in virtualized systems.
 
 
 # Dependency
@@ -29,7 +29,8 @@ Add your application name into the CFS scheduler at place_entity@kernel/sched/fa
 
 > $ cd xballoon/balloon/other/
 
-> $ ./set_clock pid clock, (0: default clock; 1: rq_clock synchronizes with the host clock)  
+> $ ./set_clock pid clock, 
+(0: default clock; 1: rq_clock synchronizes with the host clock)  
 
 Run the balloon process with your application in the guest os together.
 > $ ./balloon
