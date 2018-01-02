@@ -9,7 +9,7 @@ The current design is based on Xen 4.5 and Linux 3.18.
 
 You need:
 
-> gcc 5.0 and higher version
+> gcc 5.0 or higher version
 
 # Usage:
 
