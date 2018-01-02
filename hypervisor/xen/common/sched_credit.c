@@ -24,10 +24,6 @@
 #include <xen/keyhandler.h>
 #include <xen/trace.h>
 
-//add by Kun for bug 3
-//static int my_new_pri;
-//static int my_cur_pri;
-//end
 
 
 /*
@@ -377,9 +373,6 @@ __runq_tickle(unsigned int cpu, struct csched_vcpu *new)
      */
     if ( cur->pri == CSCHED_PRI_IDLE
          || (idlers_empty && new->pri > cur->pri) )
-//add by Kun for bug 3
-//    if ( cur->pri == CSCHED_PRI_IDLE
-//	|| (idlers_empty && my_new_pri > my_cur_pri) )
     {
         if ( cur->pri != CSCHED_PRI_IDLE )
             SCHED_STAT_CRANK(tickle_idlers_none);
@@ -426,10 +419,7 @@ __runq_tickle(unsigned int cpu, struct csched_vcpu *new)
              * and wake some of them (which is waking up and so is, likely,
              * cache cold anyway).
              */
-//commented by Kun for bug 3
             if ( new_idlers_empty && new->pri > cur->pri )
-//	    if ( new_idlers_empty && my_new_pri > my_cur_pri )
-//end
             {
                 SCHED_STAT_CRANK(tickle_idlers_none);
                 SCHED_VCPU_STAT_CRANK(cur, kicked_away);
@@ -845,16 +835,10 @@ csched_vcpu_acct(struct csched_private *prv, unsigned int cpu)
      * amount of CPU resources and should no longer be boosted.
      */
 
-//add by Kun for bug 3
-//spin_lock_irqsave(&prv->lock, flags);
-//end
 
     if ( svc->pri == CSCHED_PRI_TS_BOOST )
         svc->pri = CSCHED_PRI_TS_UNDER;
 
-//add by Kun for bug 3
-//spin_unlock_irqrestore(&prv->lock, flags);
-//end
 
     /*
      * Update credits
@@ -986,11 +970,6 @@ csched_vcpu_wake(const struct scheduler *ops, struct vcpu *vc)
     const unsigned int cpu = vc->processor;
     int pcpu = smp_processor_id();
 
-//add by Kun for bug 3
-//    struct csched_vcpu * const cur = CSCHED_VCPU(curr_on_cpu(cpu));
-//    struct csched_private *prv = CSCHED_PRIV(ops);
-//    unsigned long flags;
-//end
 
 TRACE_3D(TRC_SCHED_WAKE, vc->domain->domain_id, vc->vcpu_id, pcpu);
     BUG_ON( is_idle_vcpu(vc) );
@@ -1008,12 +987,6 @@ TRACE_3D(TRC_SCHED_WAKE, vc->domain->domain_id, vc->vcpu_id, pcpu);
 		    svc->pri = CSCHED_PRI_TS_BOOST;
 	    }
 	  
-//add by Kun for bug 3
-//spin_lock_irqsave(&prv->lock, flags);
-//my_new_pri = svc->pri;
-//my_cur_pri = cur->pri;
-//spin_unlock_irqrestore(&prv->lock, flags);
-//end
  
 	    __runq_remove(svc);  //add by Kun 
 	    __runq_insert(cpu, svc);  //add by Kun
@@ -1049,20 +1022,12 @@ TRACE_3D(TRC_SCHED_WAKE, vc->domain->domain_id, vc->vcpu_id, pcpu);
      */
     //if ( svc->pri == CSCHED_PRI_TS_UNDER &&
       //   !test_bit(CSCHED_FLAG_VCPU_PARKED, &svc->flags) )
-//add by Kun for bug 3
-//spin_lock_irqsave(&prv->lock, flags);
-//end
 
     if ( svc->pri == CSCHED_PRI_TS_UNDER )
     {
         svc->pri = CSCHED_PRI_TS_BOOST;
     }
 
-//add by Kun for bug 3
-//my_new_pri = svc->pri;
-//my_cur_pri = cur->pri;
-//spin_unlock_irqrestore(&prv->lock, flags);
-//end
 
     /* Put the VCPU on the runq and tickle CPUs */
     __runq_insert(cpu, svc);

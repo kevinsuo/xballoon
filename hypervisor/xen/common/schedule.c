@@ -1409,11 +1409,7 @@ static void schedule(void)
         cap = SCHED_OP(VCPU2OP(prev), getcap, prev);
         if(cap == 0)
                 cap = 100;
-//commented by Kun
-//        if(prev->xBalloon_sleep_time >= 29500000*(100-cap)/100) {
-	if(prev->xBalloon_sleep_time >= 30500000 * (100-50) / 100) {
-		//atomic_set(&prev->prev_xBalloon_state, 1);
-		//atomic_set(&prev->xBalloon_state, 0);
+	    if(prev->xBalloon_sleep_time >= 30500000 * (100-50) / 100) {
                 prev->runstate.prev_xBalloon_state = 1;//prev->runstate.xBalloon_state;
                 prev->runstate.xBalloon_state = 0;
         }
@@ -1483,31 +1479,6 @@ static void vcpu_singleshot_timer_fn(void *data)
     //vcpu_runstate_change(v, v->runstate.state, now);
     //delta = now - v->runstate.state_entry_time;
     if (!is_idle_domain(v->domain)) {
-        //cap = SCHED_OP(VCPU2OP(v), getcap, v);
-
-//comment by Kun
-//        capped = SCHED_OP(VCPU2OP(v), cap, v);
-
-
-//        TRACE_6D(TRC_SCHED_SINGLESHOT, v->domain->domain_id, v->vcpu_id, d1, d2, ret, capped);
-
-//comment by Kun
-//        if(cap == 0)
-//                cap = 100;
-
-
-        //if(v->xBalloon_sleep_time >= 30000000*(100-cap)/100) {
-        //if(v->xBalloon_sleep_time >= 29500000*(100-cap)/100) {
-
-
-//comment by Kun
-//        if(!capped) {
-						//atomic_set(&v->prev_xBalloon_state, 1);
-						//atomic_set(&v->xBalloon_state, 0);
-//                v->runstate.prev_xBalloon_state = 1;//prev->runstate.xBalloon_state;
-//                v->runstate.xBalloon_state = 0;
-//        }
-
 
     }
     send_timer_event(v);
