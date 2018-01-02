@@ -29,7 +29,7 @@ Add your application name into the CFS scheduler at place_entity@kernel/sched/fa
 
 > $ cd xballoon/balloon/other/
 
-> $ ./set_clock pid clock, 
+> $ ./set_clock [pid] [clockid], 
 (0: default clock; 1: rq_clock synchronizes with the host clock)  
 
 Run the balloon process with your application in the guest os together.
