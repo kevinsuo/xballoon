@@ -3276,42 +3276,31 @@ SYSCALL_DEFINE1(sched_sleep, int, timeout)
 	struct sched_sleep sched_sleep;
 //add by Kun
 	struct vcpu_runstate_info *state;
-        u64 xBalloon_state;
+    u64 xBalloon_state;
 	int state1;
 //end
 
 	sched_sleep.timeout = US_TO_NS(timeout);
 
 	//add by Kun
-	//xBalloon_state = HYPERVISOR_sched_op(SCHEDOP_wake, NULL);
 	state = this_cpu_ptr(&xen_runstate);
-        xBalloon_state = get64(&state->xBalloon_state);	
+    xBalloon_state = get64(&state->xBalloon_state);	
 	//end
-	//while (1) {
+
 	if (local_softirq_pending() || in_serving_softirq() || in_interrupt() || in_softirq() || in_irq())
-	//continue;
-	return 1;
-			//                                            local_irq_disable();
+	    return 1;
+
 	//add by Kun
 	if (xBalloon_state == 1) {
-		//HYPERVISOR_sched_op(SCHEDOP_block, &sched_sleep);
 		HYPERVISOR_sched_op(SCHEDOP_sleep, &sched_sleep);
-	//	this_cpu_ptr(&xen_runstate)->xBalloon_state = 0;
-	//	wait_event_interruptible(xBalloon_sleep_queue, this_cpu_ptr(&xen_runstate)->xBalloon_state == 1);
 		printk("xballoon running\n");
 	} else if(xBalloon_state == 0){
-	//HYPERVISOR_sched_op(SCHEDOP_sleep, &sched_sleep);
 			wait_event_interruptible(xBalloon_sleep_queue, this_cpu_ptr(&xen_runstate)->xBalloon_state == 1);
 			printk("xballoon suspended\n");
 	}
-	//if (need_resched())
-	//	}
-	//schedule();
-	//raise_softirq(SCHED_SOFTIRQ);
-	//sched_preempt_enable_no_resched();
-	//}
-//	}
+
 	return 0;
+
 }
 
 
@@ -3322,7 +3311,6 @@ void wake_xballoon_wq()
         this_cpu_ptr(&xen_runstate)->xBalloon_state = state;
 
         wake_up_interruptible(&xBalloon_sleep_queue);
-	//printk("wakeup xballoon\n");
 }
 //end
 
